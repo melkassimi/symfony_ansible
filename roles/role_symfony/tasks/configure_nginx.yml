@@ -1,0 +1,9 @@
+---
+  - name: copy nginx site.conf
+    template:
+      src: demo.conf.j2
+      dest: /etc/nginx/sites-available/default
+      owner: root
+      group: root
+      mode: '0644'
+    notify: restart nginx

@@ -1,0 +1,27 @@
+---
+- hosts: all
+  gather_facts: no
+  become: yes
+  become_method: sudo
+  
+  pre_tasks:
+   - name: "check config file exists"
+     stat:
+       path: "/etc/nginx/sites-available/default"
+     register: nginx_conf  
+
+   - name: "Remove default"
+     file: 
+       path: "/etc/nginx/sites-available/default"
+       state: absent
+     no_log: true
+     when: nginx_conf.stat.exists  
+
+  roles:
+    - role: roles/role_symfony
+
+  post_tasks:
+    - name: "Ensure Nginx is running"
+      service:
+        name: nginx 
+        state: started

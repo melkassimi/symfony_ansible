@@ -1,0 +1,6 @@
+---
+git_branch: "main"
+install_user: "quable"
+user_group: "quable"
+install_path: "/var/www"
+domain: demo

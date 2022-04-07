@@ -1,0 +1,23 @@
+---
+dependencies: []
+
+galaxy_info:
+  role_name: role_quable
+  author: Moncif EL KASSIMI
+  description: Deploy a symfony webapp
+  company: "Quable"
+  license: "test Moncif EL KASSIMI"
+  min_ansible_version: 2.4
+  platforms:
+    - name: GenericUNIX
+      versions:
+        - all
+    - name: Ubuntu
+      versions:
+        - all
+    - name: Debian
+      versions:
+        - all
+  galaxy_tags:
+    - packaging
+    - web
