@@ -1,0 +1,6 @@
+---
+fluentd_elastic_host: localhost
+fluentd_log_level: info
+fluentd_elastic_user: elastic
+fluentd_elastic_passwd: "{{elastic_password}}"
+fluentd_symfony_file_path: "/var/log/nginx/demo*.log"
