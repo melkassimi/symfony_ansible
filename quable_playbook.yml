@@ -4,6 +4,7 @@
   become: yes
   become_method: sudo
   vars:
+    git_branch: main
     fluentd_elastic_host: localhost
     fluentd_log_level: info
     fluentd_elastic_user: elastic
@@ -29,6 +30,11 @@
      no_log: true
      when: nginx_conf.stat.exists  
 
+   - name: Stop service apache2, if started
+     service:
+       name: apache2
+       state: stopped     
+
   roles:
      - role: roles/role_symfony
      - role: roles/role_elasticsearch
@@ -44,7 +50,6 @@
     - name: Ensure systemd reread the configs 
       systemd: daemon_reload=yes
       notify: restart fluentd  
-
 
     - name: "Copy fluentd configuration for the service"
       template:
