@@ -1,0 +1,8 @@
+---
+fluent_gem_executable: /opt/td-agent/embedded/bin/fluent-gem
+fluentd_version: 3
+fluentd_service_name: td-agent
+fluentd_service_state: started
+fluentd_service_enabled: true
+fluentd_plugins:
+  - fluent-plugin-elasticsearch

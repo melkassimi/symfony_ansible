@@ -1,0 +1,55 @@
+- name: Add required dependencies.
+  apt:
+    name:
+      - apt-transport-https
+      - gnupg2
+    state: present
+
+- name: "Add td-agent apt key"
+  apt_key:
+    url: https://packages.treasuredata.com/GPG-KEY-td-agent
+    state: present
+
+- name: "Add td-agent repository"
+  apt_repository:
+    repo: >- 
+      deb
+      http://packages.treasuredata.com/{{ fluentd_version }}/{{ ansible_distribution | lower }}/{{ ansible_distribution_release | lower }}/
+      {{ ansible_distribution_release | lower }} contrib
+    state: present
+    update_cache: true 
+
+- name: Install td-agent.
+  package:
+    name: td-agent
+    state: present
+
+- name: "Create configuration directory"
+  file:
+    path: "/etc/td-agent/conf.d"
+    state: directory 
+    mode: "0755"
+    owner: root
+    group: root
+
+- name: "Configuration Fluentd"
+  template:
+    src: "td-agent.conf.j2"
+    dest: "/etc/td-agent/td-agent.conf"
+    owner: root
+    group: root
+
+- name: Ensure Fluentd plugins are installed.
+  gem:
+    name: "{{ item.name | default(item) }}"
+    executable: "{{ fluent_gem_executable }}"
+    state: "{{ item.state | default('present') }}"
+    version: "{{ item.version | default(omit) }}"
+    user_install: false
+  with_items: "{{ fluentd_plugins }}"
+
+- name: "Start Fluentd"
+  service:
+    name: "{{fluentd_service_name}}"
+    state: "{{fluentd_service_state}}"
+    enabled: "{{fluentd_service_enabled}}"     
