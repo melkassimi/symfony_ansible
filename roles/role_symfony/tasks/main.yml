@@ -36,7 +36,7 @@
   - name: "Git checkout"
     git:
       repo: "https://github.com/symfony/demo.git" 
-      dest: "{{install_path}}/test_quable/"
+      dest: "{{install_path}}/symfony/"
       version: "{{git_branch}}"
       update: yes
       force: yes
@@ -44,7 +44,7 @@
 
   - name: "Change ownership of web project"
     file:
-      path: "{{install_path}}/test_quable/"
+      path: "{{install_path}}/symfony/"
       state: directory
       recurse: yes
       owner: www-data

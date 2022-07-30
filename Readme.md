@@ -13,7 +13,7 @@ None.
 
 ## Launch Playbook
 
-     ansible-playbook quable_playbook.yml -i inventory.yml --user <install_user> --ask-pass
+     ansible-playbook symfony_playbook.yml -i inventory.yml --user <install_user> --ask-pass
 
 ## Author Information
 

@@ -2,10 +2,10 @@
 dependencies: []
 
 galaxy_info:
-  role_name: role_quable
+  role_name: Symfony
   author: Moncif EL KASSIMI
   description: Deploy a symfony webapp
-  company: "Quable"
+  company: "Moncif EL KASSIMI"
   license: "test Moncif EL KASSIMI"
   min_ansible_version: 2.4
   platforms:
