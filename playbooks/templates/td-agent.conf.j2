@@ -1,0 +1,43 @@
+############
+# Sources  #
+############
+
+<source>
+  @type tail
+  @id componenta_api_tail
+  <parse>
+   @type json
+  </parse>
+  path {{fluentd_symfony_file_path}}
+  pos_file "/var/log/td-agent/api_file_transfer.log.pos"
+  tag component.api
+</source>
+
+
+############
+# Matches  #
+############
+
+<match component.**>
+  @type copy
+  @id output_copy 
+  <store>
+      @type elasticsearch
+      host {{fluentd_elastic_host}}
+      @log_level {{fluentd_log_level | default('info')}}
+   
+      port 9200
+      user {{fluentd_elastic_user}}
+      password {{fluentd_elastic_passwd}}
+  
+      ssl_verify false
+      <buffer tag, time>
+          @type file
+          path /var/log/td-agent/buffer/elasticsearch
+          timekey 60
+          flush_mode_interval
+          flush_thread_count 4
+          flush_interval 60s 
+        </buffer>
+    </store>
+</match>
