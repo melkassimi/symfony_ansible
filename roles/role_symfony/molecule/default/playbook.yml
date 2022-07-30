@@ -1,0 +1,6 @@
+---
+- name: Convergae
+  hosts: all
+  become: true
+  roles:
+    - role: "{{lookup('env', 'MOLECULE_PROJECT') | basename}}"
