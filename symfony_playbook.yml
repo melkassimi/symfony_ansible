@@ -1,0 +1,61 @@
+---
+- hosts: all
+  gather_facts: yes
+  become: yes
+  become_method: sudo
+  vars:
+    git_branch: main
+    fluentd_elastic_host: localhost
+    fluentd_log_level: info
+    fluentd_elastic_user: elastic
+    fluentd_elastic_passwd: |
+      $ANSIBLE_VAULT;1.1;AES256
+      30343835633166366634623537643736333530613333353164313333376237653132303062643663
+      6430613038383166303536353363313139393834373533330a613932653839616337323062643862
+      31663664663964383863633237613635653737353863333533313835663835373262366664396162
+      3039383461333236330a313030393966623761396461383638656436383237386332656238376438
+      35306162376366653831353432656336376361373038653535663337366664643535
+    fluentd_symfony_file_path: "/var/log/nginx/demo*.log"
+
+  pre_tasks: 
+   - name: "check config file exists"
+     stat:
+       path: "/etc/nginx/sites-available/default"
+     register: nginx_conf  
+
+   - name: "Remove default"
+     file: 
+       path: "/etc/nginx/sites-available/default"
+       state: absent
+     no_log: true
+     when: nginx_conf.stat.exists  
+
+   - name: Stop service apache2, if started
+     service:
+       name: apache2
+       state: stopped     
+
+  roles:
+     - role: roles/role_symfony
+     - role: roles/role_elasticsearch
+     - role: roles/role_fluentd
+    #- role: roles/role_supervisor
+   
+  post_tasks:
+    - name: "Ensure Nginx is running"
+      service:
+        name: nginx 
+        state: started
+
+    - name: Ensure systemd reread the configs 
+      systemd: daemon_reload=yes
+      notify: restart fluentd  
+
+    - name: "Copy fluentd configuration for the service"
+      template:
+        src: "td-agent.conf.j2"
+        dest: "/etc/td-agent/conf.d/components.conf"
+        owner: root
+        group: root
+        mode: 0644
+      notify: restart fluentd  
